@@ -1,0 +1,4 @@
+const OMNICRYPTO_API="http://127.0.0.1:8000/api";
+async function omniApi(path,options={}){const r=await fetch(OMNICRYPTO_API+path,{headers:{"Content-Type":"application/json",...(options.headers||{})},...options});const b=await r.json();if(!r.ok)throw Error(b.detail||"Backend request failed");return b;}
+async function loadOmniAnalysis(asset="Gold",startDate=null,endDate=null){return omniApi("/analysis",{method:"POST",body:JSON.stringify({asset,start_date:startDate,end_date:endDate,sma_period:20,ema_period:21})});}
+async function runOmniBacktest(asset="Gold",strategy="SMA Crossover",fastPeriod=20,slowPeriod=50,initialCapital=100000,transactionCost=.1){return omniApi("/backtest",{method:"POST",body:JSON.stringify({asset,strategy,fast_period:+fastPeriod,slow_period:+slowPeriod,initial_capital:+initialCapital,transaction_cost_pct:+transactionCost})});}
